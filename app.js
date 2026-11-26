@@ -50,11 +50,12 @@ themeBtn.addEventListener('click', function () {
    2. AUDIO PLAYER
    ========================================== */
 
-
+// files go in the /audio folder (relative paths for github pages!)
+// remember: github pages is case sensitive so Track1.ogg != track1.ogg
 const tracks = [
-  { title: 'Loop 01', file: 'audio/track1.ogg' },
-  { title: 'Loop 02', file: 'audio/track2.ogg' },
-  { title: 'Loop 03', file: 'audio/track3.ogg' }
+  { title: 'Music 01', file: 'audio/track1.ogg' },
+  { title: 'Music 02', file: 'audio/track2.ogg' },
+  { title: 'Music 03', file: 'audio/track3.ogg' }
 ];
 
 // ---- grab all the elements ----
@@ -203,12 +204,19 @@ function togglePlay() {
   }
 }
 
-// makes the big button + eq bars match whats really happening
+// makes the big button match whats really happening
 function updatePlayUI() {
   const playing = !audio.paused;
   bigPlayBtn.classList.toggle('playing', playing);
   bigPlayBtn.setAttribute('aria-label', playing ? 'Pause' : 'Play');
-  document.body.classList.toggle('is-playing', playing); // css uses this for the eq bars
+  updateEqState();
+}
+
+// eq bars only bounce if music is playing AND you can actually hear it
+// (muted or volume at 0 = bars freeze, even though the track keeps going)
+function updateEqState() {
+  const audible = !audio.paused && !audio.muted && audio.volume > 0;
+  document.body.classList.toggle('is-playing', audible); // css uses this for the eq bars
 }
 
 
@@ -258,6 +266,9 @@ document.addEventListener('keydown', function (e) {
 
 audio.addEventListener('play', updatePlayUI);
 audio.addEventListener('pause', updatePlayUI);
+
+// mute / volume changed = recheck if the eq bars should move
+audio.addEventListener('volumechange', updateEqState);
 
 // once we know the length, show it
 audio.addEventListener('loadedmetadata', function () {
@@ -387,9 +398,23 @@ try {
 audio.volume = (savedVolume >= 0 && savedVolume <= 1) ? savedVolume : 0.8;
 volumeInput.value = audio.volume;
 
+// ios ignores audio.volume (it always stays at 1), so the slider + mute button
+// do nothing there. test if a value sticks, and if not hide the volume controls
+function volumeIsControllable() {
+  const test = new Audio();
+  test.volume = 0.5;
+  return test.volume === 0.5;
+}
+
+if (!volumeIsControllable()) {
+  // css hides .volume when this class is on <html>
+  document.documentElement.classList.add('no-volume');
+}
+
 
 /* ---------- start everything up ---------- */
 buildTracklist();
 goToTrack(0, false);   // load first track but dont autoplay (browsers block that anyway)
 applyLoopMode();
 updateVolumeIcon();
+updateEqState();       // sync the eq bars on load (they start frozen cuz nothing is playing)
