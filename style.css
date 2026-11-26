@@ -1,0 +1,542 @@
+/* =========================================
+   style.css
+   dark navy + sky blue (from my itch.io player)
+   loads AFTER src/reset.css, src/common.css, src/fonts.css
+   ========================================= */
+
+/* ---------- colors (css variables) ----------
+   change these and the whole site changes, super handy */
+:root {
+  --bg: #0b1320;
+  --surface: #122036;
+  --surface-hover: #192c49;
+  --border: rgba(125, 196, 255, 0.16);
+  --primary: #7cc4ff;          /* main accent */
+  --on-primary: #08101c;       /* stuff that sits on top of the accent */
+  --primary-alt: #3b5f85;
+  --text: #e8f3ff;
+  --text-alt: #8fb0d4;
+  --highlight: rgba(124, 196, 255, 0.14);
+  --stripe1: #2b4c70;          /* scrubber stripes */
+  --stripe2: #172a42;
+  --radius: 10px;
+  --font: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+/* light mode, app.js sets data-theme="light" on <html> */
+[data-theme="light"] {
+  --bg: #eef3f9;
+  --surface: #ffffff;
+  --surface-hover: #e6eef8;
+  --border: rgba(40, 80, 130, 0.18);
+  --primary: #2f6fb0;
+  --on-primary: #ffffff;
+  --primary-alt: #c5d6ea;
+  --text: #0f1c2e;
+  --text-alt: #4d6685;
+  --highlight: rgba(47, 111, 176, 0.12);
+  --stripe1: #b7cbe3;
+  --stripe2: #d6e3f2;
+}
+
+/* ---------- fixing stuff after reset.css ----------
+   reset.css wipes almost everything (all: unset) but skips ul/ol/li,
+   and common.css adds 30px padding back to lists. so we clean lists here */
+ul,
+ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+html {
+  scroll-behavior: smooth; /* smooth scroll for the nav links */
+}
+
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  transition: background 0.3s, color 0.3s; /* so theme switch isnt harsh */
+}
+
+a {
+  color: var(--primary);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* reset removes the focus outline so we add our own back (accessibility) */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ---------- header ---------- */
+.site-header {
+  position: sticky;      /* stays on top while scrolling */
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 2rem;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+
+.logo {
+  font-weight: 700;
+  color: var(--text);
+}
+
+.site-header nav {
+  display: flex;
+  gap: 1.5rem;
+}
+
+/* flex here so the emoji sits in the middle (reset removed the default centering) */
+.theme-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  font-size: 1.1rem;
+  cursor: pointer;
+}
+
+.theme-toggle:hover {
+  border-color: var(--primary);
+}
+
+/* ---------- sections ---------- */
+.section {
+  max-width: 820px;
+  margin: 0 auto;
+  padding: 4rem 2rem;
+}
+
+/* reset zeroed the margins so we space things ourselves */
+.section p {
+  margin-bottom: 0.6rem;
+}
+
+h1 {
+  font-size: 2.4rem;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 0.3rem;
+}
+
+h2 {
+  font-size: 1.7rem;
+  font-weight: 700;
+  margin-bottom: 0.6rem;
+}
+
+.role {
+  color: var(--primary);
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+/* skill pills */
+.skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: 1.2rem;
+}
+
+.skills li {
+  padding: 0.3rem 0.9rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  font-size: 0.9rem;
+  color: var(--text-alt);
+}
+
+/* ---------- player ---------- */
+.player {
+  margin-top: 1.5rem;
+}
+
+/* top card with big button + controls */
+.player-main {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.2rem;
+  margin-bottom: 0.8rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  user-select: none;
+}
+
+/* big round play/pause button (shapes are made with css borders) */
+.big-play {
+  flex: 0 0 48px;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--primary);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 0 16px rgba(124, 196, 255, 0.25);
+  transition: transform 0.14s ease;
+}
+
+.big-play:hover {
+  transform: scale(1.05);
+}
+
+.big-play:active {
+  transform: scale(0.97);
+}
+
+/* play triangle */
+.big-play::after {
+  content: "";
+  width: 0;
+  height: 0;
+  border-top: 9px solid transparent;
+  border-bottom: 9px solid transparent;
+  border-left: 16px solid var(--on-primary);
+  margin-left: 3px; /* triangle looks off-center without this */
+}
+
+/* pause bars (js adds .playing) */
+.big-play.playing::after {
+  border: 0;
+  border-left: 4.5px solid var(--on-primary);
+  border-right: 4.5px solid var(--on-primary);
+  width: 13px;
+  height: 17px;
+  margin: 0;
+}
+
+.controls {
+  flex: 1;
+  min-width: 0;   /* lets the title truncate instead of overflowing */
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+/* title / eq / time row */
+.controls-top {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.now-title {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  font-weight: 700;
+  font-size: 1rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.time {
+  flex-shrink: 0;
+  margin: 0;
+  font-size: 0.8rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-alt);
+}
+
+/* eq bars */
+.eq {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 2.5px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+.eq span {
+  display: block;
+  width: 3px;
+  height: 100%;
+  border-radius: 2px;
+  background: var(--primary);
+  transform-origin: bottom;
+  transform: scaleY(0.28);
+  animation: eq-bounce 0.85s ease-in-out infinite;
+  animation-play-state: paused;   /* frozen until music plays */
+}
+
+/* each bar a bit different so it looks random-ish */
+.eq span:nth-child(2) { animation-delay: -0.2s;  animation-duration: 0.7s; }
+.eq span:nth-child(3) { animation-delay: -0.45s; animation-duration: 0.95s; }
+.eq span:nth-child(4) { animation-delay: -0.15s; animation-duration: 0.78s; }
+
+/* js puts .is-playing on body when audio is playing */
+body.is-playing .eq span {
+  animation-play-state: running;
+}
+
+@keyframes eq-bounce {
+  0%, 100% { transform: scaleY(0.28); }
+  50%      { transform: scaleY(1); }
+}
+
+/* progress bar / scrubber */
+.scrubber {
+  position: relative;
+  height: 20px;
+  cursor: pointer;
+  touch-action: none;  /* so dragging on phones doesnt scroll the page */
+}
+
+.scrubber-track {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 8px;
+  transform: translateY(-50%);
+  overflow: hidden;
+  border-radius: 999px;
+  /* the stripey look from the itch player */
+  background: repeating-linear-gradient(
+    135deg,
+    var(--stripe1),
+    var(--stripe1) 8px,
+    var(--stripe2) 8px,
+    var(--stripe2) 16px
+  );
+}
+
+.scrubber-fill {
+  width: 0;
+  height: 100%;
+  background: var(--primary);
+  border-radius: 999px;
+}
+
+.scrubber-knob {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 14px;
+  height: 14px;
+  transform: translate(-50%, -50%);
+  background: var(--primary);
+  border: 2px solid var(--surface);
+  border-radius: 50%;
+  box-shadow: 0 1px 4px rgba(3, 8, 18, 0.5);
+  pointer-events: none;
+}
+
+/* bottom buttons row */
+.controls-bottom {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.spacer {
+  flex: 1;
+}
+
+/* small icon buttons. the actual icon comes from the icon-* class (fonts.css) */
+.ctrl-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+  background: none;
+  border: none;
+  border-radius: 6px;
+  color: var(--text);
+  cursor: pointer;
+  transition: background 0.14s ease, opacity 0.14s ease;
+}
+
+.ctrl-btn:hover {
+  background: var(--highlight);
+}
+
+/* loop button looks dim when its off */
+.loop-btn[data-mode="none"] {
+  opacity: 0.55;
+}
+
+/* volume */
+.volume {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+/* reset.css removes the look of range inputs, so we turn the browser default back on */
+.volume-slider {
+  -webkit-appearance: auto;
+  appearance: auto;
+  width: 90px;
+  height: 1.2rem;
+  accent-color: var(--primary);
+  cursor: pointer;
+}
+
+/* track list */
+.tracklist {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.track-btn {
+  display: grid;
+  grid-template-columns: 2rem 1fr auto;
+  align-items: center;
+  width: 100%;
+  padding: 0.65rem 0.9rem;
+  text-align: left;
+  font: inherit;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.14s ease, border-color 0.14s ease;
+}
+
+.track-btn:hover {
+  background: var(--surface-hover);
+}
+
+/* the track thats currently loaded */
+.track-btn.active {
+  background: var(--surface-hover);
+  border-color: var(--primary);
+}
+
+.track-num,
+.track-dur {
+  font-size: 0.85rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-alt);
+}
+
+.track-title {
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.track-btn.active .track-title {
+  color: var(--primary);
+  font-weight: 600;
+}
+
+/* ---------- footer / contact ---------- */
+.site-footer {
+  text-align: center;
+  padding: 3rem 2rem;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+}
+
+.contact-links {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  margin: 1rem 0;
+}
+
+.copyright {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--text-alt);
+}
+
+/* people who turned off animations in their os dont get bouncing bars */
+@media (prefers-reduced-motion: reduce) {
+  .eq span {
+    animation: none;
+  }
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* =========================================
+   MOBILE - stacks everything on small screens
+   ========================================= */
+@media (max-width: 640px) {
+
+  /* header: logo, nav, then toggle button, one under another */
+  .site-header {
+    flex-direction: column;
+    gap: 0.8rem;
+    padding: 1rem;
+  }
+
+  .site-header nav {
+    gap: 1rem;
+  }
+
+  .section {
+    padding: 2.5rem 1.2rem;
+  }
+
+  h1 {
+    font-size: 1.8rem;
+  }
+
+  /* player card stacks: big button on top, controls below */
+  .player-main {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.8rem;
+  }
+
+  .big-play {
+    align-self: center;
+  }
+
+  /* time goes under the title so nothing gets squished */
+  .controls-top {
+    flex-wrap: wrap;
+  }
+
+  .time {
+    flex-basis: 100%;
+    order: 3;
+    text-align: center;
+  }
+
+  .volume-slider {
+    width: 70px;
+  }
+
+  /* contact links go vertical */
+  .contact-links {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}
