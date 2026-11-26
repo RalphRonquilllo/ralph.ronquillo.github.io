@@ -401,6 +401,11 @@ body.is-playing .eq span {
   cursor: pointer;
 }
 
+/* js adds .no-volume on ios, where the volume slider and mute button do nothing */
+.no-volume .volume {
+  display: none;
+}
+
 /* track list */
 .tracklist {
   display: flex;
